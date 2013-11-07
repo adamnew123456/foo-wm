@@ -325,7 +325,14 @@ void placeNode(Node * node, int x, int y, int width, int height) {
 
   if (isClient(node)) {
     fprintf(stderr,"Rendering window\n");
-    XMapWindow(display, node -> window);
+    XWindowAttributes attr;
+    XGetWindowAttributes(display, node -> window, &attr);
+
+    // Make sure that the window isn't already visible before remapping it.
+    if (attr.map_state != IsViewable)
+        XMapWindow(display, node -> window);
+
+
     XRaiseWindow(display, node -> window);
     XMoveResizeWindow(display, node -> window, 
         (x < 0) ? 0 : x, (y < 0) ? 0 : y, 
