@@ -7,7 +7,6 @@ Bugs
 - 'containerize' 'containerize' -- case of the missing container
 - brotherNode() in tree.c, node->parent = brother->parent ?
     * This could potentially break the old node's brothers and node parent child ptr
-- XRaiseWindow always called for Windows in placeNode regardless if already raised
 - Destroying last client doesn't focus container / set focusedNode
     * Tree: 
         - Container (1)

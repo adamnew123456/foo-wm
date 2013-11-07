@@ -332,8 +332,31 @@ void placeNode(Node * node, int x, int y, int width, int height) {
     if (attr.map_state != IsViewable)
         XMapWindow(display, node -> window);
 
+    /* Making sure that a window isn't already raised requires some gymnastics:
+     *   According to 'http://tronche.com/gui/x/xlib/window-information/XQueryTree.html'
+     *   XQueryTree produces children in stacking order. Thus, the final child 
+     *   is on top.
+     *
+     *   Note that I comment this out because it is probably very dumb to
+     *   use this code - XRaiseWindow is probably fast compared to
+     *   the XQueryTree request, the XQueryTree response, and freeing the array.
+    */
+    
+    /*
+    Window root_window = RootWindow(display, DefaultScreen(display));
+    Window root_tmp, parent_tmp;
+    Window *children;
+    int n_children;
+    XQueryTree(display, root, &root_tmp, &parent_tmp, &children, *n_children);
 
+    Window top_window = children[n_children - 1];
+    XFree(children);
+
+    if (node -> window != top_window)
+        XRaiseWindow(display, node -> window);
+    */
     XRaiseWindow(display, node -> window);
+
     XMoveResizeWindow(display, node -> window, 
         (x < 0) ? 0 : x, (y < 0) ? 0 : y, 
         (width -  (border * 2)) > 0 ? (width - border * 2) : 1, 
